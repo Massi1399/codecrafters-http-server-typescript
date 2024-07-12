@@ -13,7 +13,7 @@ const server = net.createServer((socket) => {
         if(path === "/") 
             response = "HTTP/1.1 200 OK\r\n\r\n";
         else if(path.includes('echo'))
-            response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 3\r\n\r\n"+ query;
+            response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: "+ query.lenght + "\r\n\r\n"+ query;
         socket.write(response);
     })
    socket.on("close", () => {
