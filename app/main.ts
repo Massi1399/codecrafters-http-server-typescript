@@ -7,7 +7,7 @@ console.log("Logs from your program will appear here!");
 const server = net.createServer((socket) => {
     socket.on("data" , (data)=>{
         var request = data.toString();
-        var path = request.split("/r/n")[0].split(" ")[1];
+        var path = request.split("\r\n")[0].split(" ")[1];
         var query = request.split("/")[2].trim();
         var response = "HTTP/1.1 404 Not Found\r\n\r\n";
         if(path === "/") 
