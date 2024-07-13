@@ -26,7 +26,7 @@ const server = net.createServer((socket) => {
                 break;
             case "files":
                 var file = request.split("files/")[1];
-                if(fs.existsSync(`/tmp/${file}`)) {
+                if(fs.existsSync(`/files/${file}`)) {
                     var fileContent = fs.readFileSync(`/tmp/${file}`);
                     response = `HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: ${fileContent.length}\r\n\r\n${fileContent}`;
                 }
