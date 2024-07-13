@@ -8,12 +8,24 @@ const server = net.createServer((socket) => {
     socket.on("data" , (data)=>{
         var request = data.toString();
         var path = request.split("\r\n")[0].split(" ")[1];
-        var response = "HTTP/1.1 404 Not Found\r\n\r\n";
-        if(path === "/") 
-            response = "HTTP/1.1 200 OK\r\n\r\n";
-        else if(path.includes('echo')){
-            var query = path.split("/")[2];
-            response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ${query.length}\r\n\r\n${query}`;
+        var param = path.split("/")[1];
+       
+
+        switch(param){
+            case "":
+                response = "HTTP/1.1 200 OK\r\n\r\n";
+                break;
+            case "echo":
+                var query = path.split("/")[2];
+                response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ${query.length}\r\n\r\n${query}`;
+                break;
+            case "user-agent":
+                var userAgent = request.split("User-Agent: ")[1].split("\r\n")[0];
+                response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ${userAgent.length}\r\n\r\n${userAgent}`;
+                break;
+            default:
+                var response = "HTTP/1.1 404 Not Found\r\n\r\n";
+                break;
         }
         socket.write(response);
     })
