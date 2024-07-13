@@ -1,5 +1,6 @@
 import * as net from "net";
 import * as fs from "fs"; // Add this line to import the 'fs' module
+import * as process from "process";
 
 // You can use print statements as follows for debugging, they'll be visible when running tests.
 console.log("Logs from your program will appear here!");
@@ -25,9 +26,10 @@ const server = net.createServer((socket) => {
                 response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ${userAgent.length}\r\n\r\n${userAgent}`;
                 break;
             case "files":
-                var file = request.split("files/")[1];
-                if(fs.existsSync(`/files/${file}`)) {
-                    var fileContent = fs.readFileSync(`/tmp/${file}`);
+                var filePath = process.argv[2]
+                var fileName = request.split("files/")[1];
+                if(fs.existsSync(`${filePath}/${fileName}`)){
+                    var fileContent = fs.readFileSync(`/tmp/${fileName}`);
                     response = `HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: ${fileContent.length}\r\n\r\n${fileContent}`;
                 }
                 else
