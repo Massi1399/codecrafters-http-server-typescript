@@ -1,4 +1,5 @@
 import * as net from "net";
+import * as fs from "fs"; // Add this line to import the 'fs' module
 
 // You can use print statements as follows for debugging, they'll be visible when running tests.
 console.log("Logs from your program will appear here!");
@@ -9,7 +10,7 @@ const server = net.createServer((socket) => {
         var request = data.toString();
         var path = request.split("\r\n")[0].split(" ")[1];
         var param = path.split("/")[1];
-       
+        var response = "";
 
         switch(param){
             case "":
@@ -23,8 +24,17 @@ const server = net.createServer((socket) => {
                 var userAgent = request.split("User-Agent: ")[1].split("\r\n")[0];
                 response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ${userAgent.length}\r\n\r\n${userAgent}`;
                 break;
+            case "files":
+                var file = request.split("files/")[1];
+                if(fs.existsSync(`/tmp/${file}`)) {
+                    var fileContent = fs.readFileSync(`/tmp/${file}`);
+                    response = `HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: ${fileContent.length}\r\n\r\n${fileContent}`;
+                }
+                else
+                    response = "HTTP/1.1 404 Not Found\r\n\r\n";
+                break;
             default:
-                var response = "HTTP/1.1 404 Not Found\r\n\r\n";
+                response = "HTTP/1.1 404 Not Found\r\n\r\n";
                 break;
         }
         socket.write(response);
